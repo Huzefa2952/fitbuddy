@@ -7,6 +7,7 @@ from routes.auth_routes import auth_bp
 from routes.exercise_routes import exercise_bp
 from routes.routine_routes import routine_bp
 from routes.ai_routes import ai_bp
+from ai_service import initialize_vector_store
 
 
 def create_app():
@@ -26,6 +27,7 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        initialize_vector_store()
 
     return app
 
