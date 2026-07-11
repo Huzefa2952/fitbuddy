@@ -51,7 +51,7 @@ def login():
     if not user or not user.check_password(password):
         return jsonify({"error": "Invalid email or password"}), 401
 
-    token = create_access_token(identity=user.id)
+    token = create_access_token(identity=str(user.id))
     return jsonify({"message": "Login successful", "token": token, "user": user.to_dict()}), 200
 
 
@@ -59,7 +59,7 @@ def login():
 @jwt_required()
 def profile():
     """Return the details of the currently logged-in user."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user = User.query.get(user_id)
 
     if not user:
