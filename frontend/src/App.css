@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
-  background-color: #f5f7fb;
+  font-family: 'Inter', 'Roboto', 'Segoe UI', Arial, sans-serif;
+  background-color: #f6f8fb;
 }
 
 * {

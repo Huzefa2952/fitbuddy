@@ -1,5 +1,4 @@
 // Sidebar navigation component for desktop layout.
-import React from 'react';
 import { Drawer, List, ListItem, ListItemButton, ListItemText, Toolbar } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 

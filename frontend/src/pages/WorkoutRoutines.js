@@ -1,5 +1,5 @@
 // Workout routines manager page for the FitBuddy app.
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Alert,
   Box,
@@ -39,7 +39,7 @@ function WorkoutRoutines() {
 
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const [routineResponse, exerciseResponse] = await Promise.all([
@@ -48,18 +48,18 @@ function WorkoutRoutines() {
       ]);
       setRoutines(routineResponse.data);
       setExercises(exerciseResponse.data);
-    } catch (err) {
+    } catch {
       setError('Unable to load routines right now.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [headers]);
 
   useEffect(() => {
     if (token) {
       fetchData();
     }
-  }, [token]);
+  }, [fetchData, token]);
 
   const openCreateDialog = () => {
     setEditingRoutine(null);
@@ -150,18 +150,31 @@ function WorkoutRoutines() {
       { item: true, xs: 12, md: 6, key: routine.id },
       React.createElement(
         Card,
-        { sx: { height: '100%' } },
+        { sx: { height: '100%', transition: 'transform 160ms ease, box-shadow 160ms ease', '&:hover': { transform: 'translateY(-2px)', boxShadow: 3 } } },
         React.createElement(
           CardContent,
-          null,
-          React.createElement(Typography, { variant: 'h6', gutterBottom: true }, routine.name),
+          { sx: { p: 3 } },
+          React.createElement(
+            Stack,
+            { direction: 'row', spacing: 1, alignItems: 'flex-start', justifyContent: 'space-between', sx: { mb: 2 } },
+            React.createElement(
+              Box,
+              null,
+              React.createElement(Typography, { variant: 'h6' }, routine.name),
+              React.createElement(Typography, { variant: 'body2', color: 'text.secondary' }, `${routine.exercises?.length || 0} exercises`)
+            ),
+            React.createElement(
+              Chip,
+              { label: 'Routine', color: 'primary', variant: 'outlined', size: 'small' }
+            )
+          ),
           React.createElement(
             Stack,
             { direction: 'row', spacing: 1, sx: { mb: 2 } },
             React.createElement(Button, { variant: 'outlined', size: 'small', onClick: () => openEditDialog(routine) }, 'Edit'),
             React.createElement(Button, { variant: 'outlined', color: 'error', size: 'small', onClick: () => handleDeleteRoutine(routine.id) }, 'Delete')
           ),
-          React.createElement(Typography, { variant: 'subtitle2', gutterBottom: true }, 'Exercises'),
+          React.createElement(Typography, { variant: 'subtitle2', gutterBottom: true, color: 'text.secondary' }, 'Exercises'),
           exerciseList,
           React.createElement(
             Stack,
@@ -203,14 +216,34 @@ function WorkoutRoutines() {
   return React.createElement(
     Box,
     { sx: { display: 'flex', flexDirection: 'column', gap: 3 } },
-    React.createElement(Typography, { variant: 'h4', gutterBottom: true }, 'Workout Routines'),
-    React.createElement(Typography, { color: 'text.secondary', mb: 2 }, 'Create, edit, and manage your workout routines.'),
+    React.createElement(
+      Box,
+      { sx: { display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'flex-end' }, gap: 2 } },
+      React.createElement(
+        Box,
+        null,
+        React.createElement(Typography, { variant: 'h4', gutterBottom: true }, 'Workout Routines'),
+        React.createElement(Typography, { color: 'text.secondary' }, 'Create, edit, and manage your workout routines.')
+      ),
+      React.createElement(Button, { variant: 'contained', onClick: openCreateDialog }, 'Create Routine')
+    ),
     error ? React.createElement(Alert, { severity: 'error', sx: { mb: 2 } }, error) : null,
     message ? React.createElement(Alert, { severity: 'success', sx: { mb: 2 } }, message) : null,
-    React.createElement(Button, { variant: 'contained', onClick: openCreateDialog, sx: { alignSelf: 'flex-start' } }, 'Create Routine'),
     loading
       ? React.createElement(Box, { sx: { display: 'flex', justifyContent: 'center', py: 6 } }, React.createElement(CircularProgress, null))
-      : React.createElement(Grid, { container: true, spacing: 2 }, ...routines.map(renderRoutineCard)),
+      : routines.length > 0
+        ? React.createElement(Grid, { container: true, spacing: 2 }, ...routines.map(renderRoutineCard))
+        : React.createElement(
+            Card,
+            null,
+            React.createElement(
+              CardContent,
+              { sx: { textAlign: 'center', py: 6 } },
+              React.createElement(Typography, { variant: 'h6' }, 'No routines yet'),
+              React.createElement(Typography, { color: 'text.secondary', mb: 2 }, 'Create your first routine and start adding exercises.'),
+              React.createElement(Button, { variant: 'contained', onClick: openCreateDialog }, 'Create Routine')
+            )
+          ),
     React.createElement(
       Dialog,
       { open: dialogOpen, onClose: closeDialog },

@@ -29,13 +29,53 @@ function Register() {
 
   return React.createElement(
     Box,
-    { sx: { maxWidth: 480, mx: 'auto', mt: 8 } },
+    {
+      sx: {
+        minHeight: '100vh',
+        display: 'grid',
+        placeItems: 'center',
+        px: 2,
+        py: 6,
+        background: 'linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 52%, #ECFDF5 100%)',
+      },
+    },
     React.createElement(
-      Card,
-      null,
+      Box,
+      { sx: { width: '100%', maxWidth: 980, display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1.05fr 0.95fr' }, gap: 3, alignItems: 'stretch' } },
+      React.createElement(
+        Box,
+        {
+          sx: {
+            p: { xs: 3, md: 5 },
+            borderRadius: 2,
+            color: '#FFFFFF',
+            background: 'linear-gradient(135deg, #1E3A8A 0%, #2563EB 58%, #14B8A6 100%)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            minHeight: 460,
+          },
+        },
+        React.createElement(
+          Box,
+          null,
+          React.createElement(Typography, { variant: 'h4', mb: 1 }, 'Start with FitBuddy'),
+          React.createElement(Typography, { sx: { color: 'rgba(255,255,255,0.86)', maxWidth: 420 } }, 'Create your account and keep your routines organized in a simple, focused workspace.')
+        ),
+        React.createElement(
+          Stack,
+          { spacing: 1.5 },
+          ['Secure account access', 'Saved workout routines', 'Exercise suggestions when you need them'].map((item) =>
+            React.createElement(Typography, { key: item, sx: { fontWeight: 700 } }, item)
+          )
+        )
+      ),
+      React.createElement(
+        Card,
+        { sx: { alignSelf: 'center' } },
       React.createElement(
         CardContent,
-        null,
+        { sx: { p: { xs: 3, md: 4 } } },
         React.createElement(Typography, { variant: 'h4', gutterBottom: true }, 'Register'),
         React.createElement(Typography, { color: 'text.secondary', mb: 3 }, 'Create your FitBuddy account.'),
         error ? React.createElement(Alert, { severity: 'error', sx: { mb: 2 } }, error) : null,
@@ -53,6 +93,7 @@ function Register() {
           )
         ),
         React.createElement(Typography, { variant: 'body2', sx: { mt: 2 } }, 'Already have an account? ', React.createElement(Link, { to: '/login' }, 'Login'))
+      )
       )
     )
   );
