@@ -5,14 +5,14 @@ import api from '../services/api';
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
+  const initialToken = localStorage.getItem('fitbuddy_token');
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('fitbuddy_token'));
-  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(initialToken);
+  const [loading, setLoading] = useState(Boolean(initialToken));
 
   useEffect(() => {
     const storedToken = localStorage.getItem('fitbuddy_token');
     if (!storedToken) {
-      setLoading(false);
       return;
     }
 

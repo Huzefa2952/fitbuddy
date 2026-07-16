@@ -1,5 +1,4 @@
 // Simple navbar component for the top app bar area.
-import React from 'react';
 import { AppBar, Toolbar, Typography } from '@mui/material';
 
 function Navbar() {
